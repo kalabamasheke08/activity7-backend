@@ -77,7 +77,13 @@ app.use((err, req, res, next) => {
 });
 
 // Start Server
-const port = process.env.PORT || 3000;
-app.listen(port, "0.0.0.0", () => {
-    console.log(`Server listening on port ${port}`);
-}); 
+// Export the app for Vercel
+module.exports = app;
+
+// This part allows you to still run it locally
+if (process.env.NODE_ENV !== 'production') {
+    const port = process.env.PORT || 3000;
+    app.listen(port, "0.0.0.0", () => {
+        console.log(`Server listening on port ${port}`);
+    });
+}
