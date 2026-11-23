@@ -1,6 +1,13 @@
 const Database = require('better-sqlite3');
 const path = require('path');
-const db = new Database(path.join(__dirname, 'database.db'));
+const os = require('os');
+
+// Use Vercel's temporary folder if online, otherwise use local folder
+const dbPath = process.env.VERCEL
+  ? path.join(os.tmpdir(), 'database.db')
+  : path.join(__dirname, 'database.db');
+
+const db = new Database(dbPath);
 
 // 1. Create the table
 db.exec(`CREATE TABLE IF NOT EXISTS records (
@@ -25,7 +32,7 @@ if (count.count === 0) {
     ['Door lock stuck', 'Security', 'Main entrance door lock is jamming.', 'Completed'],
     ['Whiteboard marker', 'Supplies', 'No working markers in Room 3.', 'Pending']
   ];
-  
+
   // Insert all 8 records
   sample.forEach(r => insert.run(r[0], r[1], r[2], r[3]));
   console.log("Database seeded with 8 records.");
